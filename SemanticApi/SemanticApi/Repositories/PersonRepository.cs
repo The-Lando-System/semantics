@@ -14,17 +14,13 @@ namespace SemanticApi.Repositories
         private IMongoDatabase Database;
         private IMongoCollection<Person> Collection;
 
-        public PersonRepository(string connection = null)
+        public PersonRepository()
         {
-            if (string.IsNullOrWhiteSpace(connection))
-            {
-                connection = "mongodb://admin:admin@ds033125.mlab.com:33125/test-db";
-            }
+            string connection = Environment.GetEnvironmentVariable("SEMANTICAPI_CONNECTION");
 
             Client = new MongoClient(connection);
             Database = Client.GetDatabase("test-db");
             Collection = Database.GetCollection<Person>("person");
-
         }
 
         public Person AddPerson(Person person)
