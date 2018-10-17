@@ -1,5 +1,4 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -8,16 +7,12 @@ using System.Web;
 namespace SemanticApi.Models
 {
     [DataContract]
-    public class Person
+    public class Category : MongoModel
     {
-        [DataMember]
-        [BsonId]
-        public string Id { get; set; }
-
         [DataMember]
         public string Name { get; set; }
 
         [DataMember]
-        public int Age { get; set; }
+        public IEnumerable<string> Words { get; set; }
     }
 }
