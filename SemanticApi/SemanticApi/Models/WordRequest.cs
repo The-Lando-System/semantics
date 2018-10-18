@@ -7,12 +7,9 @@ using System.Web;
 namespace SemanticApi.Models
 {
     [DataContract]
-    public class Category : MongoModel
+    public class WordRequest
     {
         [DataMember]
-        public string Name { get; set; }
-
-        [DataMember]
-        public IDictionary<string, bool> Words { get; set; }
+        public string Word { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
+using System;
 using System.Runtime.Serialization;
 
 namespace SemanticApi.Models
@@ -9,5 +10,8 @@ namespace SemanticApi.Models
         [DataMember]
         [BsonId]
         public string Id { get; set; }
+
+        [DataMember]
+        public DateTime LastModified { get; set; }
     }
 }
