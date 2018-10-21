@@ -47,6 +47,12 @@ namespace SemanticApi.Repositories
             return Collection.Find(filter).FirstOrDefault();
         }
 
+        public virtual T FindByProperty(string propName, object propValue)
+        {
+            var filter = Builders<T>.Filter.Eq(propName, propValue);
+            return Collection.Find(filter).FirstOrDefault();
+        }
+
         public virtual bool Update(string id, T item)
         {
             var findFilter = Builders<T>.Filter.Eq("_id", id);

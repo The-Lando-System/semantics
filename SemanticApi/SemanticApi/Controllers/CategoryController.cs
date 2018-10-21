@@ -7,53 +7,88 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Cors;
+using System.Net;
+using System.Net.Http;
+using SemanticApi.Filters;
 
 namespace SemanticApi.Controllers
 {
     [RoutePrefix("categories")]
     [EnableCors(origins: "*", headers: "*", methods: "*")]
+    [RequestValidator]
     public class CategoryController : ApiController
     {
         private CategoryRepository CategoryRepo = new CategoryRepository();
 
         [Route("")]
         [HttpPost]
-        public Category CreateCategory([FromBody] Category category)
+        public IHttpActionResult CreateCategory([FromBody] Category category)
         {
             if (category.Words == null)
             {
                 category.Words = new Dictionary<string, bool>();
             }
 
-            return CategoryRepo.Add(category);
+            if (CategoryRepo.FindByProperty("Name",category.Name) != null)
+            {
+                
+                return BadRequest($"Category with name [{category.Name}] already exists");
+            }
+
+            Category createdCategory = null;
+
+            try
+            {
+                createdCategory = CategoryRepo.Add(category);
+            }
+            catch (Exception e)
+            {
+                Exception exception = new Exception("Failed to create new category", e);
+                return InternalServerError(exception);
+            }
+
+            if (createdCategory == null)
+            {
+                Exception exception = new Exception("Failed to create new category");
+                return InternalServerError(exception);
+            }
+
+            return Ok(createdCategory);
         }
 
         [Route("")]
         [HttpGet]
-        public IEnumerable<Category> GetAllCategories()
+        public IHttpActionResult GetAllCategoryIdsAndNames()
         {
-            return CategoryRepo.FindAll();
+            return Ok(
+                CategoryRepo.FindAll().Select(category => new KeyValuePair<string,string>(category.Id,category.Name))
+            );
         }
 
         [Route("{id}")]
         [HttpGet]
-        public Category GetCategoryById(string id)
+        public IHttpActionResult GetCategoryById(string id)
         {
-            return CategoryRepo.FindById(id);
+            return Ok(CategoryRepo.FindById(id));
         }
 
         [Route("{id}")]
         [HttpDelete]
-        public bool DeleteCategory(string id)
+        public IHttpActionResult DeleteCategory(string id)
         {
-            return CategoryRepo.Delete(id);
+            return Ok(CategoryRepo.Delete(id));
         }
 
         [Route("{id}/add-words")]
         [HttpPost]
-        public Category AddWordsToCategory(string id, [FromBody] IEnumerable<WordRequest> words)
+        public IHttpActionResult AddWordsToCategory(string id, [FromBody] IEnumerable<WordRequest> words)
         {
             Category category = CategoryRepo.FindById(id);
+
+            if (category == null)
+            {
+                return BadRequest($"Could not find category with ID of [{id}]");
+            }
 
             foreach(WordRequest wordRequest in words)
             {
@@ -65,17 +100,22 @@ namespace SemanticApi.Controllers
             
             if (!CategoryRepo.Update(id, category))
             {
-                throw new Exception("Failed to add any words to the category");
+                InternalServerError(new Exception("Failed to add any words to the category"));
             }
 
-            return category;
+            return Ok(category);
         }
 
         [Route("{id}/remove-words")]
         [HttpPost]
-        public Category RemoveWordsFromCategory(string id, [FromBody] IEnumerable<WordRequest> words)
+        public IHttpActionResult RemoveWordsFromCategory(string id, [FromBody] IEnumerable<WordRequest> words)
         {
             Category category = CategoryRepo.FindById(id);
+
+            if (category == null)
+            {
+                return BadRequest($"Could not find category with ID of [{id}]");
+            }
 
             foreach (WordRequest wordRequest in words)
             {
@@ -87,17 +127,22 @@ namespace SemanticApi.Controllers
 
             if (!CategoryRepo.Update(id, category))
             {
-                throw new Exception("Failed to remove any words from the category");
+                InternalServerError(new Exception("Failed to remove any words from the category"));
             }
 
-            return category;
+            return Ok(category);
         }
 
         [Route("{id}/contains-words")]
         [HttpPost]
-        public IEnumerable<string> CategoryContainsWords(string id, [FromBody] IEnumerable<WordRequest> words)
+        public IHttpActionResult CategoryContainsWords(string id, [FromBody] IEnumerable<WordRequest> words)
         {
             Category category = CategoryRepo.FindById(id);
+
+            if (category == null)
+            {
+                return BadRequest($"Could not find category with ID of [{id}]");
+            }
 
             List<string> containedWords = new List<string>();
 
@@ -109,14 +154,19 @@ namespace SemanticApi.Controllers
                 }
             }
 
-            return containedWords;
+            return Ok(containedWords);
         }
 
         [Route("{id}/contains-sentence")]
         [HttpPost]
-        public IEnumerable<string> CategoryContainsSentence(string id, [FromBody] SentenceRequest sentenceRequest)
+        public IHttpActionResult CategoryContainsSentence(string id, [FromBody] SentenceRequest sentenceRequest)
         {
             Category category = CategoryRepo.FindById(id);
+
+            if (category == null)
+            {
+                return BadRequest($"Could not find category with ID of [{id}]");
+            }
 
             List<string> containedWords = new List<string>();
 
@@ -131,7 +181,7 @@ namespace SemanticApi.Controllers
                 }
             }
 
-            return containedWords;
+            return Ok(containedWords);
         }
     }
 }
