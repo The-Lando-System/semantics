@@ -14,6 +14,7 @@
           <category-area />
         </div>
         <div class="col-md-6">
+          <category-card />
         </div>
       </div>
 
@@ -23,11 +24,13 @@
 
 <script>
 import CategoryArea from './components/CategoryArea.vue';
+import CategoryCard from './components/CategoryCard.vue';
 
 export default {
   name: 'app',
   components: {
-    CategoryArea
+    CategoryArea,
+    CategoryCard
   }
 }
 </script>

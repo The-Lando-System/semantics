@@ -1,21 +1,16 @@
 <template>
-<div id="category-area">
-  <category-list />
+<div id="category-card">
+  <h4>Current Category</h4>
 </div>
 </template>
 
 <script>
-import CategoryList from './CategoryList.vue';
-
 export default {
-  components: {
-    CategoryList
-  }
 }
 </script>
 
 <style>
-#category-area {
+#category-card {
   border: solid 0.5px #e2e1e0;
   border-radius: 2px;
   padding: 20px;
