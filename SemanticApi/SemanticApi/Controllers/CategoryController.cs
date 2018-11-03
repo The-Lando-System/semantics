@@ -61,7 +61,7 @@ namespace SemanticApi.Controllers
         public IHttpActionResult GetAllCategoryIdsAndNames()
         {
             return Ok(
-                CategoryRepo.FindAll().Select(category => new KeyValuePair<string,string>(category.Id,category.Name))
+                CategoryRepo.FindAll().Select(category => new CategoryMeta { Id = category.Id, Name = category.Name })
             );
         }
 

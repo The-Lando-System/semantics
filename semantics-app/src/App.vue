@@ -8,14 +8,27 @@
           <p class="lead">Categorize and analyze words</p>
         </div>
       </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <category-area />
+        </div>
+        <div class="col-md-6">
+        </div>
+      </div>
+
     </div>
   </div>
 </template>
 
 <script>
+import CategoryArea from './components/CategoryArea.vue';
 
 export default {
-  name: 'app'
+  name: 'app',
+  components: {
+    CategoryArea
+  }
 }
 </script>
 

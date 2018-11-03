@@ -176,6 +176,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Category.cs" />
+    <Compile Include="Models\CategoryMeta.cs" />
     <Compile Include="Models\SentenceRequest.cs" />
     <Compile Include="Models\WordRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
