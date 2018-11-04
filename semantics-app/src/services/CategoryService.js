@@ -1,9 +1,9 @@
 export default {
-  requestUrl : 'http://localhost:50588/categories',
+  categoryUrl : 'http://localhost:50588/categories',
   
   getAllCategories: function(http) {
     return new Promise((resolve,reject) => {
-      http.get(this.requestUrl)
+      http.get(this.categoryUrl)
       .then((response) => {
         resolve(response.data);
       })
@@ -14,7 +14,7 @@ export default {
   },
   getCategoryById: function(http, id) {
     return new Promise((resolve,reject) => {
-      http.get(`${this.requestUrl}/${id}`)
+      http.get(`${this.categoryUrl}/${id}`)
       .then((response) => {
         resolve(response.data);
       })
@@ -25,7 +25,7 @@ export default {
   },
   addWordsToCategory: function(http, id, words) {
     return new Promise((resolve,reject) => {
-      http.post(`${this.requestUrl}/${id}/add-words`, words)
+      http.post(`${this.categoryUrl}/${id}/add-words`, words)
       .then((response) => {
         resolve(response.data);
       })
@@ -36,7 +36,7 @@ export default {
   },
   removeWordsFromCategory: function(http, id, words) {
     return new Promise((resolve,reject) => {
-      http.post(`${this.requestUrl}/${id}/remove-words`, words)
+      http.post(`${this.categoryUrl}/${id}/remove-words`, words)
       .then((response) => {
         resolve(response.data);
       })
@@ -52,7 +52,7 @@ export default {
 
         category.Name = updatedCategory.Name;
 
-        http.put(`${this.requestUrl}/${category.Id}`, category)
+        http.put(`${this.categoryUrl}/${category.Id}`, category)
         .then((response) => {
           resolve(response);
         })
@@ -65,6 +65,17 @@ export default {
         reject(error);
       });
 
+    });
+  },
+  containsWords: function(http, id, words) {
+    return new Promise((resolve,reject) => {
+      http.post(`${this.categoryUrl}/${id}/contains-words`, words)
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        reject(error);
+      });
     });
   }
 }

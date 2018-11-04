@@ -11,10 +11,10 @@
 
       <div class="row">
         <div class="col-md-6">
-          <category-area />
+          <analysis-area />
         </div>
         <div class="col-md-6">
-          <category-card />
+          <category-area />
         </div>
       </div>
 
@@ -23,14 +23,14 @@
 </template>
 
 <script>
+import AnalysisArea from './components/AnalysisArea.vue';
 import CategoryArea from './components/CategoryArea.vue';
-import CategoryCard from './components/CategoryCard.vue';
 
 export default {
   name: 'app',
   components: {
-    CategoryArea,
-    CategoryCard
+    AnalysisArea,
+    CategoryArea
   }
 }
 </script>
