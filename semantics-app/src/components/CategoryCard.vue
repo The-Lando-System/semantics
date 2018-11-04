@@ -1,6 +1,6 @@
 <template>
 <div id="category-card">
-  <div v-if="category.Id">
+  <div v-if="category.Id && !editMode">
     <div>
       <h4 id="category-name">{{category.Name}}</h4>
       <span id="word-count">{{Object.keys(category.Words).length}} words</span>
@@ -23,6 +23,10 @@
         {{word}}
       </li>
     </ul>
+    <button id="edit-category-button" v-on:click="editMode = true;" class="btn btn-info">Edit</button>
+  </div>
+  <div v-else-if="category.Id && editMode">
+    <category-editor v-bind:category="category" />
   </div>
   <div v-else>
     <h4>Select a category</h4>
@@ -31,7 +35,12 @@
 </template>
 
 <script>
+import CategoryEditor from './CategoryEditor.vue';
+
 export default {
+  components: {
+    CategoryEditor
+  },
   data: function() {
     return {
       category: {
@@ -39,7 +48,8 @@ export default {
         'Id': '',
         'Words': {}
       },
-      newWords: ''
+      newWords: '',
+      editMode: false
     }
   },
   mounted: function() {
@@ -49,6 +59,9 @@ export default {
           .getCategoryById(this.$http,category.Id)
           .then((category) => this.category = category);
       }
+    });
+    this.$broadcaster.on('goToCategoryCard', () => {
+      this.editMode = false;
     });
   },
   methods: {
@@ -91,5 +104,9 @@ export default {
 
 #add-words-button {
   cursor: pointer;
+}
+
+#edit-category-button {
+  margin-top: 20px;
 }
 </style>

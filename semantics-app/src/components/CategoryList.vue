@@ -12,7 +12,7 @@
     </div>
   </form>
 
-  <ul class="list-group">
+  <ul id="category-list" class="list-group">
     <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
       v-for="(category, index) in filteredCategories"
       v-bind:key="category.Id"
@@ -56,4 +56,8 @@ export default {
 </script>
 
 <style>
+#category-list {
+  max-height: 200px;
+  overflow: auto;
+}
 </style>
