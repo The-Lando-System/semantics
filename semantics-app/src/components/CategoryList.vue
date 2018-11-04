@@ -17,7 +17,7 @@
       v-for="(category, index) in filteredCategories"
       v-bind:key="category.Id"
       v-bind:class="activeIndex === index ? 'active' : ''"
-      v-on:click="activeIndex = index">
+      v-on:click="activeIndex = index; selectCategory(category);">
       {{category.Name}}
     </li>
   </ul>
@@ -41,6 +41,9 @@ export default {
     });
   },
   methods: {
+    selectCategory: function(category) {
+      this.$broadcaster.emit('categorySelected', category);
+    },
     filterCategories: function() {
       if (this.filterTerm) {
         this.filteredCategories = this.categories.filter(c => c.Name.toLowerCase().includes(this.filterTerm.toLowerCase()));
