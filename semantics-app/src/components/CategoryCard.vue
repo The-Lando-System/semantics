@@ -62,9 +62,9 @@ export default {
     }
   },
   mounted: function() {
-    this.$broadcaster.on('categorySelected', category => {
-      if (category){
-        this.$categorySvc.getCategoryById(this.$http,category.Id)
+    this.$broadcaster.on('categorySelected', categoryId => {
+      if (categoryId){
+        this.$categorySvc.getCategoryById(this.$http,categoryId)
         .then((category) => {
           this.category = category;
           this.filteredWords = Object.keys(this.category.Words);
