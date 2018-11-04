@@ -6,7 +6,7 @@
       <div class="input-group mb-3">
         <input v-model="filterTerm" v-on:keyup="filterCategories" type="text" id="find-category" class="form-control" placeholder="Filter">
         <div class="input-group-append">
-          <span v-on:click="filterTerm = ''; filterCategories();" class="input-group-text"><i class="fas fa-times" /></span>
+          <button v-on:click="clearFiler" class="btn btn-outline-secondary"><i class="fas fa-times" /></button>
         </div>
       </div>
     </div>
@@ -39,6 +39,15 @@ export default {
     .then((categories) => {
       this.categories = categories;
     });
+
+    this.$broadcaster.on('categoryNameUpdated', () => {
+      this.$categorySvc.getAllCategories(this.$http)
+      .then((categories) => {
+        this.categories = categories;
+        this.filteredCategories = [];
+        this.filterTerm = '';
+      });
+    });
   },
   methods: {
     selectCategory: function(category) {
@@ -50,6 +59,11 @@ export default {
       } else {
         this.filteredCategories = [];
       }
+    },
+    clearFiler: function() {
+      event.preventDefault();
+      this.filterTerm = '';
+      this.filteredCategories = [];
     }
   }
 }

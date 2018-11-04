@@ -73,6 +73,13 @@ namespace SemanticApi.Controllers
         }
 
         [Route("{id}")]
+        [HttpPut]
+        public IHttpActionResult UpdateCategory(string id, [FromBody] Category category)
+        {
+            return Ok(CategoryRepo.Update(id, category));
+        }
+
+        [Route("{id}")]
         [HttpDelete]
         public IHttpActionResult DeleteCategory(string id)
         {
