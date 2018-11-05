@@ -10,7 +10,7 @@
     <form>
       <div class="form-group">
         <div class="input-group mb-3">
-          <input v-model="newWords" type="text" id="add-words" class="form-control" placeholder="add words">
+          <input v-model="newWords" type="text" id="add-words" class="form-control">
           <div class="input-group-append">
             <button v-on:click="addWords" class="btn btn-outline-secondary">Add</button>
           </div>
@@ -19,7 +19,7 @@
     </form>
 
     <div id="word-filter" class="input-group mb-3">
-      <input v-model="filterTerm" v-on:keyup="filterWords" type="text" class="form-control" placeholder="Filter">
+      <input v-model="filterTerm" v-on:keyup="filterWords" type="text" class="form-control" placeholder="filter">
       <div class="input-group-append">
         <button v-on:click="clearFilter" class="btn btn-outline-secondary"><i class="fas fa-times" /></button>
       </div>
@@ -78,6 +78,15 @@ export default {
       this.clearFilter();
     });
     this.$broadcaster.on('wordRemoved', () => {
+      this.$categorySvc.getCategoryById(this.$http,this.category.Id)
+      .then((category) => {
+        this.category = category;
+        this.filteredWords = Object.keys(this.category.Words);
+        this.editMode = false;
+        this.clearFilter();
+      });
+    });
+    this.$broadcaster.on('addedWord', () => {
       this.$categorySvc.getCategoryById(this.$http,this.category.Id)
       .then((category) => {
         this.category = category;

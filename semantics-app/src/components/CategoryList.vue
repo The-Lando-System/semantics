@@ -4,7 +4,7 @@
     <div class="form-group">
       <label for="find-category">Find Category</label>
       <div class="input-group mb-3">
-        <input v-model="filterTerm" v-on:keyup="filterCategories" v-on:keyup.enter="selectCategoryEnter" type="text" id="find-category" class="form-control" placeholder="find category">
+        <input v-model="filterTerm" v-on:keyup="filterCategories" v-on:keyup.enter="selectCategoryEnter" type="text" id="find-category" class="form-control">
         <div class="input-group-append">
           <button v-on:click="clearFiler" class="btn btn-outline-secondary"><i class="fas fa-times" /></button>
         </div>

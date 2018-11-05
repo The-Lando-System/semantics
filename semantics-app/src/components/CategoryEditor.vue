@@ -8,7 +8,7 @@
     </div>
   </div>
   <div id="word-filter" class="input-group mb-3">
-    <input v-model="filterTerm" v-on:keyup="filterWords" type="text" class="form-control" placeholder="Filter">
+    <input v-model="filterTerm" v-on:keyup="filterWords" type="text" class="form-control" placeholder="filter">
     <div class="input-group-append">
       <button v-on:click="clearFilter" class="btn btn-outline-secondary"><i class="fas fa-times" /></button>
     </div>
@@ -57,7 +57,7 @@ export default {
     editCategoryName: function() {
       event.preventDefault();
       this.$categorySvc.updateCategoryName(this.$http, this.category)
-      .then((response) => {
+      .then(() => {
         this.$broadcaster.emit('categoryNameUpdated', {});
       });
     },
@@ -74,7 +74,7 @@ export default {
       let words = [{'Word' : word}];
 
       this.$categorySvc.removeWordsFromCategory(this.$http,this.category.Id,words)
-      .then((response) => {
+      .then(() => {
         this.clearFilter();
         this.$broadcaster.emit('wordRemoved', {});
       });

@@ -2,7 +2,7 @@
 <div id="analysis-area">
   <div v-if="category.Id">
     <h4>Analyzing with category [{{category.Name}}]</h4>
-    <textarea v-model="textInput" class="form-control" id="text-input" rows="5" placeholder="insert text"/>
+    <textarea v-model="textInput" class="form-control" id="text-input" rows="5" />
     <button v-on:click="analyze" class="btn btn-primary">Analyze</button>
     <div v-if="results">
       <hr/>
@@ -12,10 +12,13 @@
       <hr/>
       Non-matched words:
       <ul id="parsed-words-list" class="list-group">
-        <li class="list-group-item"
+        <li class="list-group-item d-flex justify-content-between align-items-center"
           v-for="(word,index) in parsedWords"
           v-bind:key="index">
           {{word}}
+          <span id="add-parsed-word-button" v-on:click="addWord(word)" class="badge badge-pill">
+            <i class="fas fa-plus-square"></i> Add to Category
+          </span>
         </li>
       </ul>
     </div>
@@ -66,6 +69,20 @@ export default {
         this.results = `Input matches ${wordPercent}% in ${this.category.Name}`;
         this.parsedWords = words.map(w => w.Word).filter(w => !matchedWords.includes(w));
       });
+    },
+    addWord: function(word) {
+      event.preventDefault();
+      let words = [{'Word':word}];
+      
+      this.$categorySvc.addWordsToCategory(this.$http,this.category.Id,words)
+      .then(() => {
+        for (let i=0; i<this.parsedWords.length; i++) {
+          if (this.parsedWords[i] === word) {
+            this.parsedWords = this.parsedWords.slice(i);
+          }
+        }
+        this.$broadcaster.emit('addedWord', {});
+      });
     }
   }
 }
@@ -81,5 +98,9 @@ export default {
 #text-input {
   margin-bottom: 20px;
   margin-top: 20px;
+}
+
+#add-parsed-word-button {
+  cursor: pointer;
 }
 </style>
