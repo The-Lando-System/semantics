@@ -1,7 +1,7 @@
 <template>
 <div id="analysis-area">
   <div v-if="category.Id">
-    <h4>Analyzing with category [{{category.Name}}]</h4>
+    <h4>Analyzing with category {{category.Name}}</h4>
     <textarea v-model="textInput" class="form-control" id="text-input" rows="5" />
     <button v-on:click="analyze" class="btn btn-primary">Analyze</button>
     <div v-if="results">
@@ -67,7 +67,7 @@ export default {
       .then((matchedWords) => {
         let wordPercent = Math.round((matchedWords.length / words.length) * 100);
         this.results = `Input matches ${wordPercent}% in ${this.category.Name}`;
-        this.parsedWords = words.map(w => w.Word).filter(w => !matchedWords.includes(w));
+        this.parsedWords = words.map(w => this.removePunctuation(w.Word.trim())).filter(w => !matchedWords.includes(w));
       });
     },
     addWord: function(word) {
@@ -78,11 +78,17 @@ export default {
       .then(() => {
         for (let i=0; i<this.parsedWords.length; i++) {
           if (this.parsedWords[i] === word) {
-            this.parsedWords = this.parsedWords.slice(i);
+            this.parsedWords.splice(i,1);
           }
         }
         this.$broadcaster.emit('addedWord', {});
       });
+    },
+    removePunctuation: function(word) {
+      return word
+        .replace('.','')
+        .replace(',','')
+        .replace('!','');
     }
   }
 }

@@ -1,8 +1,8 @@
 <template>
 <div id="category-card">
   <category-list />
-  <hr/>
   <div v-if="category.Id && !editMode">
+    <hr/>
     <div>
       <h4 id="category-name">{{category.Name}}</h4>
       <span id="word-count">{{Object.keys(category.Words).length}} words</span>
