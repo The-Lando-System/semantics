@@ -4,9 +4,20 @@
     <h4>Analyzing with category [{{category.Name}}]</h4>
     <textarea v-model="textInput" class="form-control" id="text-input" rows="5" placeholder="insert text"/>
     <button v-on:click="analyze" class="btn btn-primary">Analyze</button>
-    <hr/>
     <div v-if="results">
+      <hr/>
       {{results}}
+    </div>
+    <div v-if="parsedWords.length > 0">
+      <hr/>
+      Non-matched words:
+      <ul id="parsed-words-list" class="list-group">
+        <li class="list-group-item"
+          v-for="(word,index) in parsedWords"
+          v-bind:key="index">
+          {{word}}
+        </li>
+      </ul>
     </div>
   </div>
   <div v-else>
@@ -24,7 +35,8 @@ export default {
     return {
       textInput: '',
       category: {},
-      results: ''
+      results: '',
+      parsedWords: []
     }
   },
   mounted: function() {
@@ -52,6 +64,7 @@ export default {
       .then((matchedWords) => {
         let wordPercent = Math.round((matchedWords.length / words.length) * 100);
         this.results = `Input matches ${wordPercent}% in ${this.category.Name}`;
+        this.parsedWords = words.map(w => w.Word).filter(w => !matchedWords.includes(w));
       });
     }
   }
@@ -67,5 +80,6 @@ export default {
 
 #text-input {
   margin-bottom: 20px;
+  margin-top: 20px;
 }
 </style>
